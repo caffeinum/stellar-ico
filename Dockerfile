@@ -2,7 +2,7 @@ FROM node:10
 
 WORKDIR /usr/src/stellar
 
-COPY package-lock.json ./
+COPY package*.json ./
 
 RUN npm install
 
