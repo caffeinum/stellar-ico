@@ -1,0 +1,15 @@
+{
+  "name": "swap.online",
+  "version": "1.0.0",
+  "description": "stellar-ico",
+  "private": true,
+  "scripts": {
+    "test": "cypress open"
+  },
+  "keywords": [],
+  "author": "@nikdementev",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}

@@ -1,7 +1,6 @@
 FROM node:10
 
-# Создать директорию app
-WORKDIR /app
+WORKDIR /usr/src/stellar
 
 # Установить зависимости приложения
 # Используется символ подстановки для копирования как package.json, так и package-lock.json,
@@ -13,5 +12,7 @@ RUN npm install
 # RUN npm install --only=production
 COPY . .
 
-EXPOSE 8080
+
+EXPOSE 3000
+
 CMD [ "node", "app.js" ]
