@@ -7,7 +7,8 @@
 ### Run
 
     npm i
-    node app.js
+    node app.js &
+    open http://localhost:3000
 
 ## Docker
 

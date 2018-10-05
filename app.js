@@ -32,7 +32,7 @@ const route = (name, params, handler) => (req, res) => {
     })
 }
 
-app.get('/', (req, res) => res.send('Mint tokens at /mint?to&amount'))
+app.use(express.static('web'))
 
 app.get('/me', route('me', [], () => {
   return getBalance(ADMIN.publicKey())
