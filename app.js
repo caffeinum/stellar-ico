@@ -1,15 +1,12 @@
+require('dotenv').config()
+
 const express = require('express')
 const app = express()
 const port = 3000
 
-const {
-  createAsset, createAccount,
-  getBalance,
-  mint, send,
-  runOperation,
-} = require('./services')
+const { ADMIN_KEY, ADMIN, TOKEN } = require('./account')
 
-const { ADMIN_KEY, ADMIN, CAF } = require('./account')
+const { getBalance, mint, send } = require('./services')
 
 const aaa = (name, params, handler) => (req, res) => {
   console.log('REQUEST', name, req.query)
@@ -41,7 +38,7 @@ app.get('/send', aaa('send', ['to', 'amount'], ({ to, amount }) => {
 }))
 
 app.get('/mint', aaa('mint', ['to', 'name', 'amount'], ({ to, name, amount }) => {
-  return mint(ADMIN, CAF, to, amount)
+  return mint(ADMIN, TOKEN, to, amount)
 }))
 
 
