@@ -6,7 +6,7 @@ const runOperation = require('./runOperation')
 
 const mint = require('./mint')
 const send = require('./send')
-
+const initAccount = require('./initAccount')
 
 module.exports = {
   createAccount,
@@ -15,4 +15,5 @@ module.exports = {
   runOperation,
   mint,
   send,
+  initAccount,
 }

@@ -6,40 +6,56 @@ const port = 3000
 
 const { ADMIN_KEY, ADMIN, TOKEN } = require('./account')
 
-const { getBalance, mint, send } = require('./services')
+const { initAccount, runOperation, getBalance, mint, send } = require('./services')
 
-const aaa = (name, params, handler) => (req, res) => {
-  console.log('REQUEST', name, req.query)
+const route = (name, params, handler) => (req, res) => {
+  console.log('[SERVER]', name, req.query)
 
   const paramsValid = params.reduce((acc, param) => acc && req.query[param], true)
 
-  if (!paramsValid)
-    throw new Error(`Not enough args: ${params} required, got ${req.query}`)
+  if (!paramsValid) {
+    return res.status(500).json({
+      err: true,
+      required: params,
+      message: `not enough args: ${params} required, got ${req.query}`
+    })
+  }
 
   handler(req.query)
     .then(info => {
-      console.log('200 Success', info)
+      console.log('[SERVER] 200 Success', info)
       return res.json(info)
     })
     .catch(err => {
-      console.error('500 Error', err.message)
+      console.error('[SERVER] 500 Error', err.message)
       res.status(500).json({ err: true, message: err.message })
     })
 }
 
 app.get('/', (req, res) => res.send('Mint tokens at /mint?to&amount'))
 
-app.get('/me', aaa('getBalance', [], () => {
+app.get('/me', route('me', [], () => {
   return getBalance(ADMIN.publicKey())
+    .then(balance => ({
+      address: ADMIN.publicKey(),
+      balance,
+    }))
 }))
 
-app.get('/send', aaa('send', ['to', 'amount'], ({ to, amount }) => {
+app.get('/get-balance', route('get-balance', ['address'], ({ address }) => {
+  return getBalance(address)
+}))
+
+app.get('/create-account', route('create-account', ['address'], ({ address, startingBalance }) => {
+  return initAccount(ADMIN, address, startingBalance)
+}))
+
+app.get('/send', route('send', ['to', 'amount'], ({ to, amount }) => {
   return send(ADMIN, to, amount)
 }))
 
-app.get('/mint', aaa('mint', ['to', 'name', 'amount'], ({ to, name, amount }) => {
+app.get('/mint', route('mint', ['to', 'name', 'amount'], ({ to, name, amount }) => {
   return mint(ADMIN, TOKEN, to, amount)
 }))
 
-
-app.listen(port, () => console.log(`app listening on port ${port}!`))
+app.listen(port, () => console.log(`[SERVER] listening on port ${port}`))

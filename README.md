@@ -1,16 +1,38 @@
 ## Stellar ICO
 
+### Init
+
+    echo "KEY=SAXCEVKSHIKH3MSEK26NJ6HXBLNA5EMT7CDZIBYHHI3TLERQZ6RGGLRZ" > .env
+
+### Run
 
     npm i
     node app.js
 
+## Docker
+
+    # build/update image
+    docker build . -t stellar-ico
+
+    # run image
+    docker run --name tokensale -d -p 3000:3000 stellar-ico
+
+    # read logs
+    docker logs tokensale
 
 ## API methods
 
-    http://192.168.0.231:3000/me
+    # get my balances
+    http://localhost:3000/me
 
-    http://192.168.0.231:3000/send?to=QQQQ&amount=10
+    # generate account with 1.5 XLM
+    http://localhost:3000/create-account?address=ADDRESS
 
-    http://192.168.0.231:3000/mint?to=QQQQ&name=CAF&amount=10
+    # check account balance
+    http://localhost:3000/get-balance?address=ADDRESS
 
-    http://192.168.0.231:3000/send?to=GBBORXCY3PQRRDLJ7G7DWHQBXPCJVFGJ4RGMJQVAX6ORAUH6RWSPP6FM&amount=10
+    # send tokens to account
+    http://localhost:3000/mint?name=TOKEN&to=ADDRESS&amount=100
+
+    # send XLM to account
+    http://localhost:3000/send?to=ADDRESS&amount=10

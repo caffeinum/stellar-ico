@@ -6,6 +6,8 @@ module.exports = (key) => {
   const keypair = key ? sdk.Keypair.fromSecret(key) : sdk.Keypair.random();
   const account = new sdk.Account(keypair.publicKey(), "1")
 
+  return keypair
+
   const tx = new sdk.TransactionBuilder(account)
   tx.addOperation(sdk.Operation.createAccount({
       destination: keypair.publicKey(),
@@ -16,7 +18,6 @@ module.exports = (key) => {
 
 
   console.log('secretString', key)
-  console.log('keypair', keypair)
   console.log('publicKey', keypair.publicKey())
   console.log('acc', account)
 
