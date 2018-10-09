@@ -58,8 +58,9 @@ app.get('/mint', route('mint', ['to', 'name', 'amount'], ({ to, name, amount }) 
   return mint(ADMIN, TOKEN, to, amount)
 }))
 
-app.get('/setup', route('setup-account', [], ({ amount }) => {
-  return setupAccount(ADMIN, TOKEN)
+app.get('/setup', route('setup-account', ['tx'], ({ tx }) => {
+  console.log('app server TX', tx)
+  return setupAccount(ADMIN, tx)
 }))
 
 app.listen(port, () => console.log(`[SERVER] listening on port ${port}`))

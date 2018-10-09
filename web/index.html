@@ -4,70 +4,7 @@
 </head>
 <body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/0.11.0/stellar-sdk.js"></script>
-  <script>
-    const initSDK = (sdk) => {
-      sdk.Network.useTestNetwork()
-      return new sdk.Server('https://horizon-testnet.stellar.org')
-    }
-
-    const generateAccount = () => {
-      const key = sdk.Keypair.random()
-      window.key = key
-      console.log('new address =', key.publicKey())
-      console.log('window.key', key)
-    }
-
-    const initAccount = async () => {
-      const address = key.publicKey()
-
-      const result = await fetch(`/create-account?address=${address}`)
-
-      console.log('create account', await result.json())
-    }
-
-    const setupTrust = () => {
-      const amount = window.prompt('For how many tokens should we setup trust?') || 100
-
-      const token = new StellarSdk.Asset('TOKEN', 'GDFVH322IMUXADZHNP4M3BPM3HGX6MRFP4PX3YN73JE5TKDGGLEAGHVG')
-
-      server.loadAccount(key.publicKey())
-        .then(account => {
-          const transaction = new StellarSdk.TransactionBuilder(account)
-            .addOperation(StellarSdk.Operation.changeTrust({
-                asset: token,
-                limit: String(amount)
-            }))
-            .build();
-
-          transaction.sign(key);
-          return server.submitTransaction(transaction);
-        })
-    }
-
-    const getTokens = async () => {
-      const amount = window.prompt('How many tokens you want to buy?') || 50
-
-      const address = key.publicKey()
-
-      const result = await fetch(`/mint?name=TOKEN&amount=${amount}&to=${address}`)
-
-      console.log('get tokens', await result.json())
-    }
-
-    const checkBalance = async () => {
-      const address = key.publicKey()
-      const balance = await fetch(`/get-balance?address=${address}`)
-      console.log('get balance', await balance.json())
-    }
-
-    window.onload = () => {
-      const server = initSDK(StellarSdk)
-
-      window.server = server
-      window.sdk = StellarSdk
-    }
-
-  </script>
+  <script src="stellar-lib.js"></script>
 
   <h1>Stellar ICO</h1>
 
@@ -80,6 +17,7 @@
   <p> Create account:
   <a href="#" onclick="generateAccount()">Generate account</a>
   <a href="#" onclick="initAccount()">Initialize account</a>
+  <button onclick="setupAccount()">Setup account</button>
 
   <p> Get tokens:
 
