@@ -23,7 +23,7 @@ module.exports = (key) => {
 
   const balance = getBalance(keypair.publicKey())
 
-  balance.then(console.log)
+  console.log('balance', balance)
 
   return keypair
 }

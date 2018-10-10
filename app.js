@@ -6,7 +6,7 @@ const port = 3000
 
 const { ADMIN_KEY, ADMIN, TOKEN } = require('./account')
 
-const { initAccount, runOperation, getBalance, mint, send } = require('./services')
+const { initAccount, runOperation, getBalance, mint, send, setupAccount } = require('./services')
 
 const route = (name, params, handler) => (req, res) => {
   console.log('[SERVER]', name, req.query)
@@ -56,6 +56,10 @@ app.get('/send', route('send', ['to', 'amount'], ({ to, amount }) => {
 
 app.get('/mint', route('mint', ['to', 'name', 'amount'], ({ to, name, amount }) => {
   return mint(ADMIN, TOKEN, to, amount)
+}))
+
+app.get('/setup', route('setup-account', ['tx'], ({ tx }) => {
+  return setupAccount(tx)
 }))
 
 app.listen(port, () => console.log(`[SERVER] listening on port ${port}`))
