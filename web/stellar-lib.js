@@ -9,44 +9,52 @@ const setupAccount = async () => {
 
   console.log('admin account', data)
 
-  const envelope = await server.loadAccount(data.address)
+  return server.loadAccount(data.address)
     .then(async (sourceAccount) => {
       console.log('sourceAccount', sourceAccount)
       // Start building the transaction.
-      const tx = new sdk.TransactionBuilder(sourceAccount)
-        .addOperation(sdk.Operation.createAccount({
+
+      const createAccount = new StellarSdk.TransactionBuilder(sourceAccount)
+        .addOperation(StellarSdk.Operation.createAccount({
           destination: key.publicKey(),
-          startingBalance: '1.5'
+          startingBalance: '1.544'
         }))
-        .addOperation(sdk.Operation.changeTrust({
-          source: key.publicKey(),
-          asset: new sdk.Asset('USDTA', key.publicKey()),
-          limit: '1000'
-        }))
-        .addOperation(sdk.Operation.payment({
-          destination: key.publicKey(),
-          asset: new sdk.Asset('USDTA', key.publicKey()),
-          amount: '1000'
-        }))
-      console.log('tx', tx)
-
-      const transaction = tx.build();
-
-      console.log('transaction', transaction)
-      // Sign the transaction to prove you are actually the person sending it.
-      transaction.sign(key);
-
-      return transaction.toEnvelope().toXDR('base64');
+      return createEnvelope(createAccount)
     })
+}
 
-  console.log('envelope', envelope);
+const setTrust = () => {
+  server.loadAccount(key.publicKey())
+    .then(account => {
+      const transaction = new StellarSdk.TransactionBuilder(account)
+        .addOperation(StellarSdk.Operation.changeTrust({
+          source: key.publicKey(),
+          asset: new StellarSdk.Asset('TOKEN', 'GDFVH322IMUXADZHNP4M3BPM3HGX6MRFP4PX3YN73JE5TKDGGLEAGHVG'),
+          limit: '11'
+        }))
+        .build()
+
+      transaction.sign(key)
+
+      return server.submitTransaction(transaction)
+    })
+}
+
+const createEnvelope = async (tx) => {
+  console.log('tx', tx)
+  const transaction = tx.build()
+  transaction.sign(key)
+
+  const envelope = transaction.toEnvelope().toXDR('base64');
+  console.log('envelope', envelope)
 
   const txSendResult = await fetch(`/setup?tx=${envelope}`)
   console.log('txSendResult', await txSendResult.json())
+  return txSendResult
 }
 
 const generateAccount = () => {
-  const key = sdk.Keypair.random()
+  const key = StellarSdk.Keypair.random()
   window.key = key
   console.log('new address =', key.publicKey())
   console.log('window.key', key)

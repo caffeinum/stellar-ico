@@ -5,13 +5,13 @@ const keypair = sdk.Keypair.random()
 const address = keypair.publicKey()
 const account = new sdk.Account(address, "1")
 
-module.exports = (admin, tx) => {
+module.exports = (tx) => {
+
   console.log('server tx', tx)
+  console.log('server keypair', keypair)
 
   const restored = new sdk.Transaction(tx);
 
-  console.log('server admin', admin)
-
-  restored.sign(admin);
+  restored.sign(keypair);
   return server.submitTransaction(restored);
 }
