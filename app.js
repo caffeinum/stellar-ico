@@ -4,9 +4,7 @@ const express = require('express')
 const app = express()
 const port = 3000
 
-const { ADMIN_KEY, ADMIN, TOKEN } = require('./account')
-
-const { initAccount, runOperation, getBalance, mint, send, setupAccount } = require('./services')
+const { initAccount, getBalance, mint, send, setupAccount, changeTrust } = require('./services')
 
 const route = (name, params, handler) => (req, res) => {
   console.log('[SERVER]', name, req.query)
@@ -35,31 +33,33 @@ const route = (name, params, handler) => (req, res) => {
 app.use(express.static('web'))
 
 app.get('/me', route('me', [], () => {
-  return getBalance(ADMIN.publicKey())
-    .then(balance => ({
-      address: ADMIN.publicKey(),
-      balance,
-    }))
+  return getBalance().then(balance => ({
+    balance,
+  }))
 }))
 
 app.get('/get-balance', route('get-balance', ['address'], ({ address }) => {
   return getBalance(address)
 }))
 
-app.get('/create-account', route('create-account', ['address'], ({ address, startingBalance }) => {
-  return initAccount(ADMIN, address, startingBalance)
+app.get('/create-account', route('create-account', ['admin', 'address'], ({ admin, address, startingBalance }) => {
+  return initAccount(admin, address, startingBalance)
 }))
 
-app.get('/send', route('send', ['to', 'amount'], ({ to, amount }) => {
-  return send(ADMIN, to, amount)
+app.get('/send', route('send', ['admin', 'to', 'amount'], ({admin, to, amount }) => {
+  return send(admin, to, amount)
 }))
 
-app.get('/mint', route('mint', ['to', 'name', 'amount'], ({ to, name, amount }) => {
-  return mint(ADMIN, TOKEN, to, amount)
+app.get('/mint', route('mint', ['admin', 'to', 'name', 'amount'], ({admin, to, name, amount }) => {
+  return mint(admin, name, to, amount)
 }))
 
-app.get('/setup', route('setup-account', ['tx'], ({ tx }) => {
-  return setupAccount(tx)
+app.get('/change-trust', route('change-trust', ['admin', 'tokenName', 'issuer'], ({admin, tokenName, issuer, amount }) => {
+  return changeTrust(admin, tokenName, issuer, amount)
+}))
+
+app.get('/setup', route('setup-account', ['admin', 'amount', 'tokenName'], ({ admin, amount, tokenName }) => {
+  return setupAccount(admin, amount, tokenName)
 }))
 
 app.listen(port, () => console.log(`[SERVER] listening on port ${port}`))
