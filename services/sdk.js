@@ -1,6 +1,6 @@
 const sdk = require('stellar-sdk')
 
-const server = new sdk.Server(process.env.SERVER)
+const server = new sdk.Server(process.env.HORIZON_HOST)
 
 const NETWORK = process.env.NETWORK || ''
 

@@ -1,5 +1,6 @@
 const { sdk } = require('./sdk')
 const runOperation = require('./runOperation')
+const createAsset = require('./createAsset')
 
 
 module.exports = (admin, tokenName, issuer, amount) => {
@@ -8,7 +9,7 @@ module.exports = (admin, tokenName, issuer, amount) => {
 
   return runOperation(keypair, 'changeTrust', {
     source: issuer,
-    asset: tokenName,
+    asset: createAsset(tokenName, issuer),
     limit: String(amount)
   })
 }

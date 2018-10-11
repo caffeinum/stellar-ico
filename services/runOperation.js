@@ -7,11 +7,13 @@ module.exports = (from, operation_type, options) => {
     return Promise.reject(new Error(`Unknown operation type: ${operation_type}`))
   }
 
+  var transaction
+
   return server.loadAccount(from.publicKey())
     .then(function(sourceAccount) {
       const operation = operationBuilder.call(sdk.Operation, options)
 
-      const transaction = new sdk.TransactionBuilder(sourceAccount)
+      transaction = new sdk.TransactionBuilder(sourceAccount)
         .addOperation(operation)
         .build();
 

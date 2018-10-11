@@ -14,7 +14,7 @@ const loginAdmin = () => {
 }
 
 const setupAccount = async () => {
-  const result  = await fetch(`/setup?admin=${secretKey}&tokenName=TOKEN`)
+  const result  = await fetch(`/setup?admin=${secretKey}&tokenName=TOKEN&amount=1`)
   console.log('result setup account', await result.json())
 }
 

@@ -1,9 +1,9 @@
 const { sdk, server } = require('./sdk')
 
-module.exports = (admin, name, totalSupply) => {
+module.exports = (admin, user, name, totalSupply) => {
 
   const keypair = sdk.Keypair.fromSecret(admin)
 
-  const issuer = keypair.publicKey();
+  const issuer = user || keypair.publicKey();
   return new sdk.Asset(name, issuer);
 }

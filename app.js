@@ -58,8 +58,8 @@ app.get('/change-trust', route('change-trust', ['admin', 'tokenName', 'issuer'],
   return changeTrust(admin, tokenName, issuer, amount)
 }))
 
-app.get('/setup', route('setup-account', ['admin', 'tokenName'], ({ admin, tokenName }) => {
-  return setupAccount(admin, tokenName)
+app.get('/setup', route('setup-account', ['amount', 'admin', 'tokenName'], ({ amount, admin, tokenName }) => {
+  return setupAccount(admin, amount, tokenName)
 }))
 
 app.listen(port, () => console.log(`[SERVER] listening on port ${port}`))
