@@ -1,9 +1,12 @@
-const { sdk, server } = require('./sdk')
+const { sdk } = require('./sdk')
 
 const runOperation = require('./runOperation')
 
-const mint = (admin, asset, to, amount) => {
-  return runOperation(admin, 'payment', {
+const mint = (admin, asset = 'TOKEN', to, amount) => {
+
+  const keypair = sdk.Keypair.fromSecret(admin)
+
+  return runOperation(keypair, 'payment', {
     destination: to,
     asset: asset,
     amount: String(amount),

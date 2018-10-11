@@ -3,24 +3,19 @@ const initSDK = (sdk) => {
   return new sdk.Server('https://horizon-testnet.stellar.org')
 }
 
+const loginAdmin = () => {
+  const keypair = StellarSdk.Keypair.fromSecret("SAXCEVKSHIKH3MSEK26NJ6HXBLNA5EMT7CDZIBYHHI3TLERQZ6RGGLRZ")
+
+  console.log('account admin', keypair)
+  console.log('public key admin', keypair.publicKey())
+
+  window.secretKey = 'SAXCEVKSHIKH3MSEK26NJ6HXBLNA5EMT7CDZIBYHHI3TLERQZ6RGGLRZ'
+  window.adminKey = keypair
+}
+
 const setupAccount = async () => {
-  const result  = await fetch('/me')
-  const data    = await result.json()
-
-  console.log('admin account', data)
-
-  return server.loadAccount(data.address)
-    .then(async (sourceAccount) => {
-      console.log('sourceAccount', sourceAccount)
-      // Start building the transaction.
-
-      const createAccount = new StellarSdk.TransactionBuilder(sourceAccount)
-        .addOperation(StellarSdk.Operation.createAccount({
-          destination: key.publicKey(),
-          startingBalance: '1.544'
-        }))
-      return createEnvelope(createAccount)
-    })
+  const result  = await fetch(`/setup?admin=${secretKey}&tokenName=TOKEN`)
+  console.log('result setup account', await result.json())
 }
 
 const setTrust = () => {
@@ -53,17 +48,17 @@ const createEnvelope = async (tx) => {
   return txSendResult
 }
 
-const generateAccount = () => {
-  const key = StellarSdk.Keypair.random()
-  window.key = key
-  console.log('new address =', key.publicKey())
-  console.log('window.key', key)
-}
 
 const initAccount = async () => {
+  const key = StellarSdk.Keypair.random()
+  window.key = key
+
+  console.log('new address =', key.publicKey())
+  console.log('window.key', key)
+
   const address = key.publicKey()
 
-  const result = await fetch(`/create-account?address=${address}`)
+  const result = await fetch(`/create-account?admin=${secretKey}&address=${address}`)
 
   console.log('create account', await result.json())
 }

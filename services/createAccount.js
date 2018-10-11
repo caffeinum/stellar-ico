@@ -1,12 +1,10 @@
-const { sdk, server } = require('./sdk')
+const { sdk } = require('./sdk')
 
 const getBalance = require('./getBalance')
 
 module.exports = (key) => {
   const keypair = key ? sdk.Keypair.fromSecret(key) : sdk.Keypair.random();
   const account = new sdk.Account(keypair.publicKey(), "1")
-
-  return keypair
 
   const tx = new sdk.TransactionBuilder(account)
   tx.addOperation(sdk.Operation.createAccount({
@@ -21,9 +19,8 @@ module.exports = (key) => {
   console.log('publicKey', keypair.publicKey())
   console.log('acc', account)
 
-  const balance = getBalance(keypair.publicKey())
-
-  console.log('balance', balance)
+  getBalance(keypair.publicKey())
+    .then(balance => console.log(balance))
 
   return keypair
 }
