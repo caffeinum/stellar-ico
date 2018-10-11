@@ -16,13 +16,13 @@ module.exports = async (admin, tokenName = 'TOKEN', amount = 1) => {
   const changeTrust = await runOperation(userKey, 'changeTrust', {
     source: userKey.publicKey(),
     asset: asset,
-    limit: amount,
+    limit: String(amount),
   })
 
   const payment = await runOperation(adminKey, 'payment', {
     destination: userKey.publicKey(),
     asset: asset,
-    amount: amount,
+    amount: String(amount),
   })
 
   return {

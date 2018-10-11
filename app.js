@@ -58,7 +58,7 @@ app.get('/change-trust', route('change-trust', ['admin', 'tokenName', 'issuer'],
   return changeTrust(admin, tokenName, issuer, amount)
 }))
 
-app.get('/setup', route('setup-account', ['amount', 'admin', 'tokenName'], ({ amount, admin, tokenName }) => {
+app.get('/setup', route('setup-account', ['admin', 'amount', 'tokenName'], ({ admin, amount, tokenName }) => {
   return setupAccount(admin, amount, tokenName)
 }))
 
